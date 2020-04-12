@@ -40,4 +40,43 @@ Once the extension is installed, simply use it in your code by  :
             console.log(e.detail);
         }',
     ],
-]) ?>```
+]) ?>
+```
+
+In your user controller, here is an example on how to use the actionLogin method:
+
+```php
+    public function actionLogin()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new LoginForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            Yii::$app->response->format = 'json';
+            return [
+            	'success' => true,
+            	// pass other data here that you can retrieve in the onLoginSuccess
+            ];
+        } else {
+            if ($model->errors) {
+                Yii::$app->response->format = 'json';
+                return $model->errors;
+            }
+            $model->password = '';
+
+            if (Yii::$app->request->isAjax) {
+                return $this->renderAjax('login', [
+                    'model' => $model,
+                ]);
+            }
+            return $this->render('login', [
+                'model' => $model,
+            ]);
+        }
+    }
+```
+
+You can customize this action to fit your project.

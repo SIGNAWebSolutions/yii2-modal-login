@@ -13,24 +13,33 @@ function submitMyModalForm(form, formdata)
         processData : false,
         type        : 'POST',
         success     : function(data, textStatus, jqXHR) {
-            if (data.success == true) {
+            if ((typeof data.success !== 'undefined') && (data.success == true)) {
                 loginSuccess(data);
                 $('#modalContent').html('');
                 $('#modal-window').modal('hide');
                 return false;
             } else {
                 var formId = '#'+form.attr('id');
-                $(formId + ' .alert-danger').show();
-                $(formId + ' .alert-danger ul').empty();
-                for (const [key, values] of Object.entries(data.errors)) {
-                    for (var i = values.length - 1; i >= 0; i--) {
-                        $(formId + ' .alert-danger ul').append('<li>'+values[i]+'</li>');
+                var selection = false;
+                if ($(formId + ' .error-summary')[0]) {
+                    selection = formId + ' .error-summary';
+                    $(selection).show();
+                    $(selection + ' ul').empty();
+                } else if ($(formId + ' .alert-danger')[0]) {
+                    selection = formId + ' .alert-danger';
+                    $(selection).show();
+                    $(selection + ' ul').empty();
+                }
+                if (selection) {
+                    for (const [key, values] of Object.entries(data)) {
+                        for (var i = values.length - 1; i >= 0; i--) {
+                            $(selection + ' ul').append('<li>'+values[i]+'</li>');
+                        }
                     }
                 }
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alert('error');
             console.log("server error when submitMyModalForm");
             console.log(xhr.status);
             console.log(thrownError);
