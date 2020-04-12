@@ -80,3 +80,8 @@ In your user controller, here is an example on how to use the actionLogin method
 ```
 
 You can customize this action to fit your project.
+
+If you don't see errors on the modal window, think to add the error summary function inside your form:
+```php
+<?= $form->errorSummary($model) ?>
+```
