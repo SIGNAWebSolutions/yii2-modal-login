@@ -16,19 +16,18 @@ namespace signa\modallogin;
  */
 class ModalLoginAsset extends \yii\web\AssetBundle {
 
-    public $sourcePath = '@signa/yii2-modal-login/assets';
+    public $sourcePath = '@signa/modallogin/assets';
 
-    // public $baseUrl = '@web';
-    
     public $css = [
-        'modal-login.css',
+        'css/modal-login.css',
     ];
 
     public $js = [
-    	'modal-login.js',
+    	'js/modal-login.js',
     ];
 
     public $depends = [
         'yii\web\JqueryAsset',
+        'yii\widgets\ActiveFormAsset',
     ];
 }

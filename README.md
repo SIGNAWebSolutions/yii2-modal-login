@@ -10,7 +10,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist signawebsolutions/yii2-modal-login "*"
+composer require --prefer-dist signawebsolutions/yii2-modal-login "*"
 ```
 
 or add
@@ -28,4 +28,16 @@ Usage
 Once the extension is installed, simply use it in your code by  :
 
 ```php
-<?= \signa\modallogin\ModalLogin::widget(); ?>```
+<?= \signa\modallogin\ModalLogin::widget([
+    'label' => Yii::t('app', 'Login'),
+    'url' => ['/user/login'],
+    'loginFormId' => 'login-form',
+    'options' => [
+        'class' => 'btn',
+    ],
+    'events' => [
+        'onLoginSuccess' => 'function (e) {
+            console.log(e.detail);
+        }',
+    ],
+]) ?>```

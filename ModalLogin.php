@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright &copy; Samir IZZA, signawebsolutions.com, 2020
  * @package yii2-modal-login
@@ -8,10 +9,10 @@
 namespace signa\modallogin;
 
 use Yii;
+use yii\web\View;
 use yii\base\Widget;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
@@ -19,29 +20,45 @@ use yii\helpers\Url;
  *
  * @author Samir IZZA <samirmember@gmail.com>
  * @since 1.0
+ * @see https://github.com/signawebsolutions/yii2-modal-login
  */
 class ModalLogin extends Widget
 {
 
     /**
      * @var array the HTML attributes for the button.
-     * It can alo use these options
-     *
-     * - `class`: css classes of the button. We always add the modal-form class.
-     * - `for`: head title of the modal window.
-     * - `url`: the url to open in the modal window.
      */
 	public $options = [];
 
-	public $urlParams;
-
+    /**
+     * @var array the URL to open in the modal form using the Url::to method.
+     */
 	public $url;
 
+    /**
+     * @var string the label of the button that open the modal window.
+     */
 	public $label;
 
+    /**
+     * @var string the header to show on the top of the modal window.
+     */
 	public $headerLabel;
 
+    /*
+     * Available events:
+     * - `onLoginSuccess`: fire after the user login successfully and before closing the modal window.
+     */
+	public $events = [];
 
+	/**
+	 * @var string the ID of the login form. This is used to attach an event to the login form.
+	 */
+	public $loginFormId = 'login-form';
+
+    /**
+     * @inheritdoc
+     */
 	public function init()
 	{
 		parent::init();
@@ -52,9 +69,18 @@ class ModalLogin extends Widget
             throw new InvalidConfigException(Yii::t('mlogin', 'The "label" property must be set.'));
         }
 
-        ModalLoginAsset::register();
+        if (isset($this->events['onLoginSuccess'])) {
+            $userEvent = $this->events['onLoginSuccess'];
+            $this->view->registerJs(<<<JS
+                document.addEventListener('onLoginSuccess', $userEvent);
+            JS, View::POS_READY
+            );
+        }
 	}
 
+    /**
+     * @inheritdoc
+     */
     public function run()
     {
     	$options = [
@@ -65,10 +91,17 @@ class ModalLogin extends Widget
 		$options = ArrayHelper::merge($options, $this->options);
 		$options['class'] = $this->options['class'] . ' modal-form';
 
-		// var_dump($options);
-		// exit;
+		return $this->render('view', [
+			'options' => $options,
+			'label' => $this->label,
+			'formId' => $this->loginFormId,
+		]);
+    }
 
-
-    	return Html::a($this->label, null, $options);
+    public function afterRun($result)
+    {
+        $result = parent::afterRun($result);
+        // code here
+        return $result;
     }
 }
