@@ -24,6 +24,31 @@ use yii\helpers\Url;
  */
 class ModalLogin extends Widget
 {
+    /**
+     * Modal extra large size
+     */
+    const XL = 'xl';
+
+    /**
+     * Modal large size
+     */
+    const LARGE = 'lg';
+
+    /**
+     * Modal medium size
+     */
+    const MEDIUM = 'md';
+
+    /**
+     * Modal small size (default)
+     */
+    const SMALL = 'sm';
+
+    /**
+     * @var string Size of the Modal window, must be one of the [[ModalLogin::XL]],
+     * [[ModalLogin::MEDIUM]] or [[ModalLogin::SMALL]].
+     */
+    public $size = self::MEDIUM;
 
     /**
      * @var array the HTML attributes for the button.
@@ -48,6 +73,7 @@ class ModalLogin extends Widget
     /*
      * Available events:
      * - `onLoginSuccess`: fire after the user login successfully and before closing the modal window.
+     * - `onOpenModal`: fire when the modal window is opened.
      */
 	public $events = [];
 
@@ -76,6 +102,14 @@ class ModalLogin extends Widget
             JS, View::POS_READY
             );
         }
+
+        if (isset($this->events['onOpenModal'])) {
+            $userEvent = $this->events['onOpenModal'];
+            $this->view->registerJs(<<<JS
+                document.addEventListener('onOpenModal', $userEvent);
+            JS, View::POS_READY
+            );
+        }
 	}
 
     /**
@@ -89,12 +123,14 @@ class ModalLogin extends Widget
 		];
 
 		$options = ArrayHelper::merge($options, $this->options);
-		$options['class'] = $this->options['class'] . ' modal-form';
+
+		$options['class'] = (isset($this->options['class'])) ? $this->options['class'] . ' modal-form' : 'modal-form';
 
 		return $this->render('view', [
 			'options' => $options,
 			'label' => $this->label,
 			'formId' => $this->loginFormId,
+            'size' => $this->size,
 		]);
     }
 

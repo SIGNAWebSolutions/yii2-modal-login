@@ -82,3 +82,7 @@ function loginSuccess(data)
     });
     document.dispatchEvent(event);
 }
+
+$('body').on('click', '.modal-backdrop, #modal-window .close, #modal-window .btn', function() {
+    $("#modal-window iframe").attr("src", $("#modal-window iframe").attr("src"));
+});

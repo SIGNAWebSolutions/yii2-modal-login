@@ -7,11 +7,14 @@ ModalLoginAsset::register($this);
 
 Modal::begin([
     'id' => 'modal-window',
-    'size' => 'modal-xs',
+    'size' => 'modal-' . $size,
     'headerOptions' => [
     	'class' => 'bg-default'
     ],
-    'title' => Yii::t('mlogin', 'Details'),
+    // 'title' => Yii::t('mlogin', 'Details'),
+    // 'title' => '<h5 class="modal-title w-100 text-center">' . Yii::t('app', 'Détails') .'</h5>',
+    // 'title' => '<h5 id="modal-window-label" class="modal-title">' . Yii::t('app', 'Détails') .'</h5>',
+    'title' => '',
     'options' => [
     	'tabindex' => ''
     ],
