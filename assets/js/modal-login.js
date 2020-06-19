@@ -56,6 +56,7 @@ $(".modal-form").click(function(e)
 
     $('#modal-window').on('show.bs.modal', function (e) {
         setTimeout(function() {
+            openModal();
             var formId = $('#login-form-id').html();
             $('#' + formId).on('beforeSubmit', function(e) {
                 var form = $(this);
@@ -80,6 +81,12 @@ function loginSuccess(data)
     var event = new CustomEvent('onLoginSuccess', {
         detail: data
     });
+    document.dispatchEvent(event);
+}
+
+function openModal()
+{
+    var event = new CustomEvent('onOpenModal');
     document.dispatchEvent(event);
 }
 
